@@ -1,0 +1,17 @@
+.title {
+    font-weight: 600;
+}
+
+.paper {
+    border: 1px solid black !important;
+    box-shadow: 10px 10px 5px #888;
+}
+
+.container {
+    width: 100%;
+}
+
+.error {
+    color: red;
+    font-size: 0.8rem;
+}

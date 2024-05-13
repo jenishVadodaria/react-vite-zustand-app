@@ -1,0 +1,54 @@
+{
+  "users": [
+    {
+      "id": "db44be5a-1786-4c6a-b357-5650b",
+      "first_name": "Jenish",
+      "last_name": "Vadodariya",
+      "email": "jenish@gmail.com",
+      "password": "Test@1234",
+      "phone_number": "1234567890",
+      "access_token": "eyJlbWFpbCI6ImplbmlzaC4xMzRwYXRlbEBnbWFpbC5jb20iL",
+      "profile_picture": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+    },
+    {
+      "id": "db44be5a-1786-4c6a-b357-3429z",
+      "first_name": "Jon",
+      "last_name": "Snow",
+      "email": "jon@gmail.com",
+      "password": "Test@1234",
+      "phone_number": "1234567890",
+      "access_token": "eyJlbWFpbCI6InpvbmcuMjMJeir434CEPFNRLYiEpbC5jb20iL",
+      "profile_picture": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+    },
+    {
+      "id": "db44be5a-1786-4c6a-b357-8723q",
+      "first_name": "Virat",
+      "last_name": "Kohli",
+      "email": "virat@gmail.com",
+      "password": "Test@1234",
+      "phone_number": "1234567890",
+      "access_token": "lpUiMDMWOFDN34-942KMKMWDpowrfsfimpPOKDW29348kllnfe",
+      "profile_picture": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+    },
+    {
+      "id": "db44be5a-1786-4c6a-b357-2290x",
+      "first_name": "Jason",
+      "last_name": "Bourne",
+      "email": "jason@gmail.com",
+      "password": "Test@1234",
+      "phone_number": "1234567890",
+      "access_token": "qdqMWMDPW3r49-MKWMKMDewfpwfi32049KMDIPMADMM39942mcm",
+      "profile_picture": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+    },
+    {
+      "id": "db44be5a-1786-4c6a-b357-3429z",
+      "first_name": "Walter",
+      "last_name": "White",
+      "email": "heisenberg@gmail.com",
+      "password": "Test@1234",
+      "phone_number": "1234567890",
+      "access_token": "JMDW3r49-MKWMKMDewfpwfi32049KMDIPMADMM39942mcm",
+      "profile_picture": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+.header {
+    height: 3.75rem;
+    /* margin-bottom: rem(120px); */
+    background-color: #702963;
+
+}
+
+.inner {
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+
+.linkLabel {
+    /* margin-right: 5rem; */
+    color: white;
+}
+
+.downsvg {
+    height: 0.9rem;
+    width: 0.9rem;
+    color: white;
+    margin-left: 0.5rem;
+}
+
+.dropdown {
+    width: inherit;
+    padding: 8px 12px;
+}

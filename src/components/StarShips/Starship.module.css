@@ -1,0 +1,5 @@
+.mainbox {
+    @media screen and (max-width: 1103px) {
+        width: 100%
+    }
+}
