@@ -68,19 +68,22 @@ const PeopleDetail = () => {
         <Flex
           justify="flex-start"
           gap={"md"}
-          style={{ gap: "2.5rem" }}
-          wrap={"wrap"}
+          style={{ gap: "3.5rem" }}
+          // wrap={"wrap"}
+          className={classes.biocontainer}
         >
           <Stack
             justify="flex-start"
             align={"flex-start"}
             spacing={"md"}
-            //   maw={"70%"}
+            w={"45%"}
+            style={{ padding: "0.75rem", margin: "0.75rem" }}
+            className={classes.biobox}
           >
-            <Text size="xl" fw={500} className={classes.title}>
+            <Text size="lg" fw={500} className={classes.title}>
               {data?.name}
             </Text>
-            <Group spacing={"xl"} position="left" style={{ gap: "3.5rem" }}>
+            <Group spacing={"xl"} position="left" style={{ gap: "1.5rem" }}>
               <BadgeGroup
                 title={"born"}
                 data={data?.birth_year as string}
@@ -107,46 +110,47 @@ const PeopleDetail = () => {
               />
             </Group>
           </Stack>
-          <Box>
-            <Box
-              sx={(theme) => ({
-                height: "90%",
-                padding: theme.spacing.md,
-                borderRadius: theme.radius.md,
-                margin: theme.spacing.md,
-                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.25)",
-              })}
+
+          <Box
+            sx={(theme) => ({
+              height: "100%",
+              padding: theme.spacing.md,
+              borderRadius: theme.radius.md,
+              margin: theme.spacing.md,
+              boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.25)",
+              width: "45%",
+            })}
+            className={classes.characteristics}
+          >
+            <Title order={3}>Characteristics</Title>
+            <Group
+              spacing={"xl"}
+              position="left"
+              style={{ gap: "2.5em", marginTop: "1rem" }}
             >
-              <Title order={3}>Characteristics</Title>
-              <Group
-                spacing={"xl"}
-                position="left"
-                style={{ gap: "2.5em", marginTop: "1rem" }}
-              >
-                <BadgeGroup
-                  title={"Eye color"}
-                  data={data?.eye_color as string}
-                  gap="8px"
-                  color="green"
-                />
-                <BadgeGroup
-                  title={"Hair color"}
-                  data={data?.hair_color as string}
-                  gap="8px"
-                  color="green"
-                />
-                <BadgeGroup
-                  title={"Skin color"}
-                  data={data?.skin_color as string}
-                  gap="8px"
-                  color="green"
-                />
-              </Group>
-            </Box>
+              <BadgeGroup
+                title={"Eye color"}
+                data={data?.eye_color as string}
+                gap="8px"
+                color="green"
+              />
+              <BadgeGroup
+                title={"Hair color"}
+                data={data?.hair_color as string}
+                gap="8px"
+                color="green"
+              />
+              <BadgeGroup
+                title={"Skin color"}
+                data={data?.skin_color as string}
+                gap="8px"
+                color="green"
+              />
+            </Group>
           </Box>
         </Flex>
       )}
-      <Space h="xl" style={{ marginTop: "4rem" }} />
+      <Space h="xl" style={{ marginTop: "1rem" }} />
       <Flex
         justify="flex-start"
         gap={"md"}
@@ -156,7 +160,7 @@ const PeopleDetail = () => {
         <HomeWorld homeWorldId={homeWorldId} />
         <StarShip StarShipId={starShipId} />
       </Flex>
-      <Space h="xl" style={{ marginTop: "2rem" }} />
+      <Space h="xl" style={{ marginTop: "1rem" }} />
       <Film films={data?.films} />
     </Box>
   );

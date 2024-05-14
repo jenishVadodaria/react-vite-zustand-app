@@ -26,6 +26,7 @@ const Login = () => {
     password: "",
   });
   const [errors, setErrors] = useState<ZodLoginSchemaErrors | null>(null);
+  const [disableLoginButton, setDisableLoginButton] = useState<boolean>(false);
 
   const { setAccessToken, setAuthData } = useAuthData();
   const navigate = useNavigate();
@@ -44,6 +45,7 @@ const Login = () => {
       navigate(ROUTES.swapi.people);
     },
     onError: (error) => {
+      setDisableLoginButton(false);
       toast.error(error as string);
     },
   });
@@ -55,7 +57,7 @@ const Login = () => {
         setErrors(result.error.format());
         return;
       }
-
+      setDisableLoginButton(true);
       loginMutation.mutate();
     } catch (error) {
       console.error(error);
@@ -109,10 +111,14 @@ const Login = () => {
           <Button
             fullWidth
             mt="xl"
-            style={{ fontWeight: 500 }}
+            style={{
+              fontWeight: 500,
+              color: `${disableLoginButton ? "black" : "white"}`,
+            }}
             onClick={handleLogin}
+            disabled={disableLoginButton}
           >
-            Login
+            {disableLoginButton ? "Logging In..." : "Login"}
           </Button>
         </Paper>
       </Container>

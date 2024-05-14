@@ -1,21 +1,36 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPeople } from "./service/api";
-import { Box, Loader, Skeleton, Table, TextInput, Title } from "@mantine/core";
+import {
+  Box,
+  Loader,
+  Skeleton,
+  Space,
+  Table,
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core";
 import PeopleListPagination from "./PeopleListPagination";
 import { debounce } from "../../utils/debounce";
 import classes from "./People.module.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../routes/routes";
 
 const PeopleList = () => {
-  const [page, setPage] = useState<number>(1);
-  const [search, setSearch] = useState<string>("");
-  const [searchInput, setSearchInput] = useState<string>("");
   const [totalPages, setTotalPages] = useState(0);
   const [sortColumn, setSortColumn] = useState<string>("name");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const qpage = parseInt(queryParams.get("qpage") || "1");
+  const qsearch = queryParams.get("qsearch") || "";
+  const [page, setPage] = useState<number>(Number(qpage) || 1);
+  const [search, setSearch] = useState<string>(qsearch || "");
+  const [searchInput, setSearchInput] = useState<string>(qsearch || "");
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ["getAllPeople", page, search],
     queryFn: () =>
@@ -30,6 +45,18 @@ const PeopleList = () => {
       setTotalPages(Math.ceil(data?.count / 10));
     }
   }, [data]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (searchInput !== "") {
+      params.set("qsearch", search);
+    }
+    if (page) {
+      params.set("qpage", page.toString());
+    }
+
+    navigate(`?${params.toString()}`);
+  }, [navigate, page, search, qpage, qsearch]);
 
   const setPageCount = (page: number) => {
     setPage(page);
@@ -167,109 +194,107 @@ const PeopleList = () => {
     );
   };
 
+  const headings = [
+    "Name",
+    "Height",
+    "Mass",
+    "Gender",
+    "Films",
+    "Starships",
+    "Vehicles",
+  ];
+
+  const headingRow = headings.map((heading) => (
+    <th key={heading} onClick={() => handleSort(heading.toLocaleLowerCase())}>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Text>{heading}</Text>
+        {renderArrow(heading.toLocaleLowerCase())}
+      </Box>
+    </th>
+  ));
+
   return (
     <Box
       sx={(theme) => ({
         height: "100%",
         padding: theme.spacing.xl,
         borderRadius: theme.radius.md,
+        // border: "3px solid black",
       })}
     >
-      <Title order={1} sx={{ margin: "2rem" }}>
-        People List
-      </Title>
       <Box
         sx={{
+          display: "flex",
+          flexDirection: "column",
           margin: "2rem",
-          overflow: "auto",
-          border: "1px solid #0000001a",
-          borderRadius: "0.75rem",
-          padding: "1rem 0rem 2rem 0rem",
         }}
       >
-        <TextInput
-          placeholder="Search by name"
-          label=""
-          style={{ width: "30%", margin: "0rem 0rem 0.3rem 2rem" }}
-          onChange={(e) => onSearchChange(e.target.value)}
-          value={searchInput}
-        />
+        <Title order={1}>People List</Title>
+        <Space h="xl" style={{ marginTop: "1.5rem" }} />
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
+            border: "1px solid #0000001a",
+            borderRadius: "0.75rem",
+            padding: "1rem 0rem 2rem 1rem",
           }}
         >
-          <Table
-            striped
-            highlightOnHover
-            // withBorder
-            horizontalSpacing="md"
-            verticalSpacing="md"
-            fontSize="md"
-            sx={{ width: "95%" }}
-          >
-            <thead>
-              <tr>
-                <th onClick={() => handleSort("name")}>
-                  Name {renderArrow("name")}
-                </th>
-                <th onClick={() => handleSort("height")}>
-                  Height {renderArrow("height")}
-                </th>
-                <th onClick={() => handleSort("mass")}>
-                  Mass {renderArrow("mass")}
-                </th>
-                <th onClick={() => handleSort("gender")}>
-                  Gender {renderArrow("gender")}
-                </th>
-                <th onClick={() => handleSort("films")}>
-                  Films {renderArrow("films")}
-                </th>
-                <th onClick={() => handleSort("starships")}>
-                  Starships {renderArrow("starships")}
-                </th>
-                <th onClick={() => handleSort("vehicles")}>
-                  Vehicles {renderArrow("vehicles")}
-                </th>
-                <th>Preview</th>
-              </tr>
-            </thead>
-            {isLoading ? (
-              <tr>
-                <td colSpan={7}>
-                  <Skeleton height={18} mt={20} radius="xl" />
-                  <Skeleton height={18} mt={20} radius="xl" />
-                  <Skeleton height={18} mt={20} radius="xl" />
-                  <Skeleton height={18} mt={20} radius="xl" />
-                  <Skeleton height={18} mt={20} radius="xl" />
-                </td>
-              </tr>
-            ) : isError ? (
-              <tr>
-                <td
-                  colSpan={7}
-                  style={{ textAlign: "center", marginTop: "2rem" }}
-                >
-                  Error fetching data!
-                </td>
-              </tr>
-            ) : (
-              <>
-                {data.results.length > 0 ? (
-                  <tbody>{rows}</tbody>
-                ) : (
-                  <tr>
-                    <td colSpan={7} style={{ textAlign: "center" }}>
-                      No data found!
-                    </td>
-                  </tr>
-                )}
-              </>
-            )}
-          </Table>
+          <TextInput
+            placeholder="Search by name"
+            label=""
+            className={classes.searchbox}
+            onChange={(e) => onSearchChange(e.target.value)}
+            value={searchInput}
+          />
+          <Box sx={{ overflow: "auto" }}>
+            <Table
+              striped
+              highlightOnHover
+              // withBorder
+              horizontalSpacing="md"
+              verticalSpacing="md"
+              fontSize="md"
+              // sx={{ width: "95%" }}
+            >
+              <thead>
+                <tr>
+                  {headingRow}
+                  <th>Preview</th>
+                </tr>
+              </thead>
+              {isLoading ? (
+                <tr>
+                  <td colSpan={7}>
+                    <Skeleton height={18} mt={20} radius="xl" />
+                    <Skeleton height={18} mt={20} radius="xl" />
+                    <Skeleton height={18} mt={20} radius="xl" />
+                    <Skeleton height={18} mt={20} radius="xl" />
+                    <Skeleton height={18} mt={20} radius="xl" />
+                  </td>
+                </tr>
+              ) : isError ? (
+                <tr>
+                  <td
+                    colSpan={7}
+                    style={{ textAlign: "center", marginTop: "2rem" }}
+                  >
+                    Error fetching data!
+                  </td>
+                </tr>
+              ) : (
+                <>
+                  {data.results.length > 0 ? (
+                    <tbody>{rows}</tbody>
+                  ) : (
+                    <tr>
+                      <td colSpan={7} style={{ textAlign: "center" }}>
+                        No data found!
+                      </td>
+                    </tr>
+                  )}
+                </>
+              )}
+            </Table>
+          </Box>
         </Box>
       </Box>
       {data && data.results.length > 0 && (
@@ -279,7 +304,7 @@ const PeopleList = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            marginBottom: "3  rem",
+            marginBottom: "3rem",
           }}
         >
           <PeopleListPagination

@@ -13,6 +13,34 @@
 }
 
 .title {
-    font-size: 5rem;
+    font-size: 3rem;
+    /* line-height: 70px; */
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.searchbox {
+    width: 30%;
+    margin: 0rem 0rem 0.3rem 0rem;
+
+    @media screen and (max-width: 600px) {
+        width: 90%;
+    }
+}
+
+.biocontainer {
+    @media screen and (max-width: 700px) {
+        flex-wrap: wrap;
+    }
+}
+
+.characteristics {
+    @media screen and (max-width: 700px) {
+        width: 100%
+    }
+}
+
+.biobox {
+    @media screen and (max-width: 700px) {
+        width: 100%
+    }
 }
