@@ -16,20 +16,28 @@ import { debounce } from "../../utils/debounce";
 import classes from "./People.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../routes/routes";
+import { Sort } from "../../utils/sort";
+import PreviewSvg from "../../assets/svg/PreviewSvg";
+import UpArrowSvg from "../../assets/svg/UpArrowSvg";
+import DownArrowSvg from "../../assets/svg/DownArrowSvg";
 
 const PeopleList = () => {
   const [totalPages, setTotalPages] = useState(0);
-  const [sortColumn, setSortColumn] = useState<string>("name");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const navigate = useNavigate();
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
   const qpage = parseInt(queryParams.get("qpage") || "1");
   const qsearch = queryParams.get("qsearch") || "";
+  const sortcol = queryParams.get("sortcol") || "";
+  const sortdir = queryParams.get("sortdir") || "";
   const [page, setPage] = useState<number>(Number(qpage) || 1);
   const [search, setSearch] = useState<string>(qsearch || "");
   const [searchInput, setSearchInput] = useState<string>(qsearch || "");
+  const [sortColumn, setSortColumn] = useState<string>(sortcol || "");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc" | string>(
+    sortdir || ""
+  );
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["getAllPeople", page, search],
@@ -55,8 +63,25 @@ const PeopleList = () => {
       params.set("qpage", page.toString());
     }
 
-    navigate(`?${params.toString()}`);
-  }, [navigate, page, search, qpage, qsearch]);
+    if (sortColumn) {
+      params.set("sortcol", sortColumn);
+    }
+
+    if (sortDirection) {
+      params.set("sortdir", sortDirection);
+    }
+
+    navigate(`?${params.toString()}`, { replace: true });
+  }, [
+    page,
+    search,
+    sortColumn,
+    sortDirection,
+    qpage,
+    qsearch,
+    sortcol,
+    sortdir,
+  ]);
 
   const setPageCount = (page: number) => {
     setPage(page);
@@ -83,26 +108,7 @@ const PeopleList = () => {
     }
   };
 
-  const sortedData = data?.results.slice().sort((a, b) => {
-    const aValue = a[sortColumn];
-    const bValue = b[sortColumn];
-    if (sortColumn === "height" || sortColumn === "mass") {
-      const aValue = parseFloat(a[sortColumn]);
-      const bValue = parseFloat(b[sortColumn]);
-      return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
-    }
-    if (typeof aValue === "string" && typeof bValue === "string") {
-      return sortDirection === "asc"
-        ? aValue.localeCompare(bValue)
-        : bValue.localeCompare(aValue);
-    }
-    if (Array.isArray(aValue) && Array.isArray(bValue)) {
-      return sortDirection === "asc"
-        ? aValue.length - bValue.length
-        : bValue.length - aValue.length;
-    }
-    return 0;
-  });
+  const sortedData = data && Sort(data?.results, sortColumn, sortDirection);
 
   const handleDetailPageNavigation = (url: string, name: string) => {
     const segments = url.split("/");
@@ -120,25 +126,7 @@ const PeopleList = () => {
       <td>{row.starships.length}</td>
       <td>{row.vehicles.length}</td>
       <td onClick={() => handleDetailPageNavigation(row.url, row.name)}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.7}
-          stroke="currentColor"
-          className={classes.preview}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-          />
-        </svg>
+        <PreviewSvg className={classes.preview} />
       </td>
     </tr>
   ));
@@ -146,51 +134,12 @@ const PeopleList = () => {
   const renderArrow = (column: string) => {
     return sortColumn === column ? (
       sortDirection === "asc" ? (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={3}
-          stroke="currentColor"
-          className={classes.arrow}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="m4.5 15.75 7.5-7.5 7.5 7.5"
-          />
-        </svg>
+        <UpArrowSvg className={`${classes.arrow}`} />
       ) : (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={3}
-          stroke="currentColor"
-          className={classes.arrow}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="m19.5 8.25-7.5 7.5-7.5-7.5"
-          />
-        </svg>
+        <DownArrowSvg className={classes.arrow} />
       )
     ) : (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={3}
-        stroke="currentColor"
-        className={classes.arrow}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="m4.5 15.75 7.5-7.5 7.5 7.5"
-        />
-      </svg>
+      <UpArrowSvg className={classes.arrow} />
     );
   };
 
@@ -207,7 +156,16 @@ const PeopleList = () => {
   const headingRow = headings.map((heading) => (
     <th key={heading} onClick={() => handleSort(heading.toLocaleLowerCase())}>
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Text>{heading}</Text>
+        <Text
+          style={{
+            color:
+              sortColumn === heading.toLocaleLowerCase()
+                ? "#000000"
+                : "#495057",
+          }}
+        >
+          {heading}
+        </Text>
         {renderArrow(heading.toLocaleLowerCase())}
       </Box>
     </th>

@@ -7,6 +7,9 @@ import {
   Container,
   Button,
   Center,
+  Group,
+  Image,
+  Box,
 } from "@mantine/core";
 import { useAuthData } from "../../store/auth.store";
 import classes from "./Login.module.css";
@@ -17,6 +20,7 @@ import { useMutation } from "@tanstack/react-query";
 import { login } from "./services/api";
 import toast from "react-hot-toast";
 import { ROUTES } from "../../routes/routes";
+import star_wars_image from "../../assets/star_wars_image.jpg";
 
 export type ZodLoginSchemaErrors = ZodFormattedError<TLoginSchema>;
 
@@ -66,63 +70,90 @@ const Login = () => {
   };
 
   return (
-    <Center h={"100vh"}>
-      <Container size={500} className={classes.container}>
-        <Title ta="center" mb={30} className={classes.title}>
-          Welcome back!
-        </Title>
-
-        <Paper
-          withBorder
-          shadow="md"
-          p={30}
-          mb={180}
-          radius="md"
-          className={classes.paper}
+    // <Center h={"100vh"}>
+    // <Container size={500} className={classes.container}>
+    <Container
+      p={0}
+      m={0}
+      w={"100%"}
+      h={"100%"}
+      maw={"100%"}
+      // className={classes.container}
+    >
+      <Group position="left" w={"100%"} maw={"100%"} noWrap>
+        <Image
+          src={star_wars_image}
+          alt="Star Wars Logo"
+          width={"100%"}
+          maw={"50%"}
+          height={"100vh"}
+          className={classes.sw_image}
+        />
+        <Box
+          sx={{
+            maxWidth: "50%",
+            width: "100%",
+            padding: "2rem",
+          }}
+          className={classes.loginbox}
         >
-          <TextInput
-            label="Email"
-            placeholder="Enter Your Email"
-            required
-            onChange={(e) =>
-              setLoginData({ ...loginData, email: e.target.value })
-            }
-          />
-          {errors?.email?._errors && errors?.email?._errors.length > 0 && (
-            <div className={classes.error}>{errors?.email?._errors[0]}</div>
-          )}
-          <PasswordInput
-            label="Password"
-            placeholder="Enter Your password"
-            required
-            mt="md"
-            onChange={(e) =>
-              setLoginData({ ...loginData, password: e.target.value })
-            }
-          />
+          <Title ta="center" mb={30} className={classes.title}>
+            Welcome TO SWAPI!
+          </Title>
 
-          {errors?.password?._errors &&
-            errors?.password?._errors.length > 0 && (
-              <div className={classes.error}>
-                {errors?.password?._errors[0]}
-              </div>
-            )}
-
-          <Button
-            fullWidth
-            mt="xl"
-            style={{
-              fontWeight: 500,
-              color: `${disableLoginButton ? "black" : "white"}`,
-            }}
-            onClick={handleLogin}
-            disabled={disableLoginButton}
+          <Paper
+            withBorder
+            shadow="md"
+            p={30}
+            // m={0 100 100 100}
+            radius="md"
+            className={classes.paper}
           >
-            {disableLoginButton ? "Logging In..." : "Login"}
-          </Button>
-        </Paper>
-      </Container>
-    </Center>
+            <TextInput
+              label="Email"
+              placeholder="Enter Your Email"
+              required
+              onChange={(e) =>
+                setLoginData({ ...loginData, email: e.target.value })
+              }
+            />
+            {errors?.email?._errors && errors?.email?._errors.length > 0 && (
+              <div className={classes.error}>{errors?.email?._errors[0]}</div>
+            )}
+            <PasswordInput
+              label="Password"
+              placeholder="Enter Your password"
+              required
+              mt="md"
+              onChange={(e) =>
+                setLoginData({ ...loginData, password: e.target.value })
+              }
+            />
+
+            {errors?.password?._errors &&
+              errors?.password?._errors.length > 0 && (
+                <div className={classes.error}>
+                  {errors?.password?._errors[0]}
+                </div>
+              )}
+
+            <Button
+              fullWidth
+              mt="xl"
+              style={{
+                fontWeight: 500,
+                color: `${disableLoginButton ? "black" : "white"}`,
+              }}
+              onClick={handleLogin}
+              disabled={disableLoginButton}
+            >
+              {disableLoginButton ? "Logging In..." : "Login"}
+            </Button>
+          </Paper>
+        </Box>
+      </Group>
+    </Container>
+    // </Center>
   );
 };
 
